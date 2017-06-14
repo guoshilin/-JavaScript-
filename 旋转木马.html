@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>旋转木马</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        img {
+            vertical-align: top;
+        }
+
+        #slider {
+            width: 1200px;
+            height: 700px;
+            margin: 100px auto;
+            position: relative;
+            /*background-color: red;*/
+        }
+
+        #slider_top {
+
+        }
+
+        #slider_top li {
+            list-style: none;
+            /*width: 800px;*/
+            /*height: 577px;*/
+            position: absolute;
+            /*left: 200px;*/
+            top: 0;
+        }
+
+        #slider_top li img {
+            width: 100%;
+            height: 100%;
+        }
+
+        #slider_controll {
+            position: relative;
+            opacity: 0;
+            z-index: 99;
+            top: 30%;
+        }
+
+        .slider_next, .slider_pre {
+            position: absolute;
+            /*left: 0;*/
+            width: 76px;
+            height: 112px;
+            margin-top: 35px;
+        }
+
+        .slider_pre {
+            background: url("images/prev.png") 0 0 no-repeat;
+            left: 5px;
+        }
+
+        .slider_next {
+            background: url("images/next.png") 0 0 no-repeat;
+            right: 5px;
+        }
+
+    </style>
+</head>
+<body>
+<div id="slider">
+    <ul id="slider_top">
+        <li><img src="images/1.jpg" alt=""></li>
+        <li><img src="images/2.jpg" alt=""></li>
+        <li><img src="images/3.jpg" alt=""></li>
+        <li><img src="images/4.jpg" alt=""></li>
+        <li><img src="images/5.jpg" alt=""></li>
+        <li><img src="images/6.jpg" alt=""></li>
+        <li><img src="images/7.jpg" alt=""></li>
+    </ul>
+    <div id="slider_controll">
+        <span class="slider_pre"></span>
+        <span class="slider_next"></span>
+    </div>
+</div>
+
+<script src="ScrollBasic.js"></script>
+<script>
+    //1.找对象
+    var slider = document.getElementById('slider');
+    var slider_controll = document.getElementById('slider_controll');
+    var controlls = slider_controll.children;
+    //2.当鼠标进入的时候让span的两个箭头显示
+    slider.onmouseover = function () {
+        buffer(slider_controll, {'opacity': 1});
+    }
+    //3.当鼠标离开的时候隐藏箭头
+    slider.onmouseout = function () {
+        buffer(slider_controll, {'opacity': 0});
+    }
+
+    // 4. 定位
+    // 4.1 位置信息
+    var json = [
+        {   //  1
+            width: 400,
+            top: 20,
+            left: 50,
+            opacity: 0.2,
+            z: 2
+        },
+        {  // 2
+            width: 600,
+            top: 70,
+            left: 0,
+            opacity: 0.8,
+            z: 3
+        },
+        {   // 3
+            width: 800,
+            top: 100,
+            left: 200,
+            opacity: 1,
+            z: 4
+        },
+        {  // 4
+            width: 600,
+            top: 70,
+            left: 600,
+            opacity: 0.8,
+            z: 3
+        },
+        {   //5
+            width: 400,
+            top: 20,
+            left: 750,
+            opacity: 0.2,
+            z: 2
+        },
+        {  // 6
+            width: 500,
+            top: 40,
+            left: 0,
+            opacity: 0.1,
+            z: 3
+        },
+        {   //7
+            width: 500,
+            top: 40,
+            left: 600,
+            opacity: 0.1,
+            z: 3
+        }
+    ];
+    //5.初始化的时候让每一个li都有层级
+    var slider_top = document.getElementById('slider_top');
+    var allLis = slider_top.children;
+    changePosition();
+
+    //6.拆解我们数组json
+    function changePosition() {
+        for (var i = 0; i < json.length; i++) {
+            var jsonItem = json[i];
+            // 给每一个li设置位置
+            buffer(allLis[i],{
+                'width': jsonItem.width,
+                'top': jsonItem.top,
+                'left': jsonItem.left,
+                'opacity': jsonItem.opacity,
+                'zIndex': jsonItem.z
+            })
+        }
+    }
+
+    //7.监听鼠标在左边箭头和右边箭头的点击
+    for (var i = 0; i < controlls.length; i++) {
+        //7.1取出单个的span
+        var mySpan = controlls[i];
+        //7.2.判断到底是点击了左边还是右边
+        mySpan.onmousedown= function() {
+            if (this.className == 'slider_pre') {
+                // /*移出位置数组中的第一个放到最后一个*/¬
+                json.push(json.shift());
+                //再次调用位置更新
+                changePosition();
+            }
+            else if (this.className == 'slider_next') {
+                /*移出位置数组中的最后一个放到第一个*/
+                json.push(json.shift());
+                //再次调用位置更新
+                changePosition();
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
